@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  base_python: &base_python
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  app:
+    <<: *base_python
+    command: uvicorn friendlyeats.app:app --host 0.0.0.0 --port 80 --reload --log-level debug
+    env_file:
+      - .env
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/code

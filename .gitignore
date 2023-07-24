@@ -1,0 +1,14 @@
+*.DS_Store
+.idea/
+.venv/
+venv
+.vscode/
+.env
+
+.Python
+.secrets.toml
+.python-version
+
+**/__pycache__
+testing.db
+*celerybeat-schedule

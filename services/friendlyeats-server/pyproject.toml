@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "friendly-eats-restaurant-service"
+version = "0.1.0"
+description = "restaurant"
+authors = ["Marwan"]
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 120
+
+[tool.black]
+line_length = 120
+
+[tool.flakehell]  # https://flakehell.readthedocs.io/config.html
+format = "grouped"
+show_source = true
+statistics = false
+doctests = true
+exclude = ["venv"]
+baseline = ".flakehell_baseline"  # remember current project state and show only new errors
+extended_default_ignore = []  # https://github.com/flakehell/flakehell/issues/10
+max_complexity = 12
+max_line_length = 120
+
+[tool.flakehell.plugins]
+"flake8-*" = ["+*"]
+flake8-bugbear = ["+*", "-B008"]
+flake8-use-fstring = ["+*", "-FS003"]
+flake8-isort = ["-*"]
+mccabe = ["+*"]
+nitpick = ["+*"]
+pycodestyle = ["+*", "-E203", "-E722", "-W503"]
+pyflakes = ["+*", "-F811"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.88.0"
+alembic = "^1.9.0"
+dynaconf = "^3.1.11"
+jwt = "^1.3.1"
+requests = "^2.28.1"
+uvicorn = "^0.20.0"
+redis = "^4.4.0"
+sentry-sdk = {extras = ["fast-api"], version = "^1.14.0"}
+flakehell = "^0.9.0"
+pytest = "^7.2.0"
+flake8 = "3.9.0"
+flake8-bugbear = "^22.10.27"
+flake8-comprehensions = "^3.10.1"
+flake8-use-fstring = "^1.4"
+flake8-isort = "^5.0.3"
+flake8-black = "^0.3.4"
+typer = "^0.7.0"
+PyJWT = "^2.6.0"
+google-cloud-firestore = "^2.11.1"
+firebase-admin = "^6.2.0"
+
+[tool.poetry.dev-dependencies]
+isort = "^5.10.1"
+black = "^22.10.0"
+autoflake = "^1.4"
+flynt = "^0.77"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -9,8 +9,6 @@ router = APIRouter()
 
 
 # Add routers here via router.include_router({router_name})
-
-
 @router.get("/health")
 async def health():
     return {"status": "success"}
@@ -83,7 +81,7 @@ async def add_review(restaurant_id: str, rating: Rating):
         })
 
         # Add the new rating to the ratings collection
-        rating.userId = "123456789"  # Assuming 'uid' is the user ID
+        rating.userId = "123456789"  # Assign random uid for now
         rating_collection_ref.document().set(rating.dict())
 
     return {"message": "Review added successfully", "restaurant_id": restaurant_id}

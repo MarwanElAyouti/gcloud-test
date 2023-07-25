@@ -1,24 +1,12 @@
-import {
-    useFirestoreCollectionData,
-    useFirestore,
-    useStorage,
-} from 'reactfire';
-import {
-    doc,
-    collection,
-    runTransaction,
-    updateDoc,
-} from 'firebase/firestore';
 import { useOutletContext, useParams } from 'react-router-dom';
 import RatingModal from '../components/ratingModal';
 import { JSX } from 'react/jsx-runtime';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 import AddIcon from '../assets/add.svg';
 import axios from 'axios';
 import { useQuery, useMutation } from 'react-query';
 
-const Restaurant = ({queryClient}) => {
+const Restaurant = ({ queryClient }) => {
     const uid = useOutletContext();
     const { id } = useParams();
 
@@ -32,8 +20,6 @@ const Restaurant = ({queryClient}) => {
     const addRating = async (review:any) =>
         await axios.post(`http://localhost:80/ratings/${id}/add_rating`, review).then((response) => response.data)
     
-        // Firestore
-    const firestore = useFirestore();
     // const getRestaurant = () => {
     //     getDoc(doc(collection(firestore, 'restaurants'), id)).then(
     //         (docSnap: any) => {
@@ -51,34 +37,32 @@ const Restaurant = ({queryClient}) => {
             queryClient.invalidateQueries('reviews');
         },
     });
-    // Storage
-    const storage = useStorage();
+
 
     const updateRestaurantImage = async (target: HTMLInputElement) => {
-        const image = target.files ? target.files[0] : null;
-        if (!image) {
-            return;
-        }
-        try {
-            const filePath = `images/${id}/${image.name}`;
-            const newImageRef = ref(storage, filePath);
-            await uploadBytesResumable(newImageRef, image);
-            const publicImageUrl = await getDownloadURL(newImageRef);
-            const restaurantRef = doc(collection(firestore, 'restaurants'), id);
-            console.log(publicImageUrl, '2');
-            restaurantRef
-                ? await updateDoc(restaurantRef, {
-                    photo: publicImageUrl,
-                })
-                : null;
-        } catch (error) {
-            console.error(
-                'There was an error uploading a file to Cloud Storage:',
-                error
-            );
-        }
+        // const image = target.files ? target.files[0] : null;
+        // if (!image) {
+        //     return;
+        // }
+        // try {
+        //     const filePath = `images/${id}/${image.name}`;
+        //     const newImageRef = ref(storage, filePath);
+        //     await uploadBytesResumable(newImageRef, image);
+        //     const publicImageUrl = await getDownloadURL(newImageRef);
+        //     const restaurantRef = doc(collection(firestore, 'restaurants'), id);
+        //     console.log(publicImageUrl, '2');
+        //     restaurantRef
+        //         ? await updateDoc(restaurantRef, {
+        //             photo: publicImageUrl,
+        //         })
+        //         : null;
+        // } catch (error) {
+        //     console.error(
+        //         'There was an error uploading a file to Cloud Storage:',
+        //         error
+        //     );
+        // }
     };
-
     return (
         <div className="bg-navy-20 min-h-screen">
             <div className="relative w-full">

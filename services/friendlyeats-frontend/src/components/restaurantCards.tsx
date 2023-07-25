@@ -2,8 +2,6 @@ import { useNavigate } from 'react-router-dom';
 
 const RestaurantCards = ({ restaurants, displayCol }: any) => {
     const navigate = useNavigate();
-    console.log(restaurants);
-    
     return (
         <>
             <div

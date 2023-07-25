@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useFirestoreCollectionData, useFirestore } from 'reactfire';
-import { where, collection, orderBy, query } from 'firebase/firestore';
 import FilterModal from '../components/filterModal';
 import RestaurantCards from '../components/restaurantCards';
 import { useQuery } from 'react-query';
@@ -27,8 +25,7 @@ const Home = () => {
     const fetchRestaurants =  async () =>
         await axios.get('http://localhost:80/restaurants').then((response) => response.data)
     
-    // Read from Firestore
-    const firestore = useFirestore();
+
     // const getFilteredRestaurants = () => {
     //     let q = query(collection(firestore, 'restaurants'));
     //     if (filters.category !== '') {

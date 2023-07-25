@@ -1,10 +1,9 @@
 import { Auth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useAuth, useUser, useFirestore } from 'reactfire';
+import { useAuth, useUser } from 'reactfire';
 import FriendlyEatsLogo from '../assets/friendly-eats.svg';
 import MenuIcon from '../assets/menu.svg';
 import { useEffect } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
 
 const Header = () => {
     // Auth
@@ -19,12 +18,11 @@ const Header = () => {
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth, provider);
     };
-    // Firestore 
-    const firestore = useFirestore();
 
     const addRestaurant = (data: any) => {
-        const restaurantCollection = collection(firestore, 'restaurants');
-        return addDoc(restaurantCollection, data);
+        // TODO 
+        // const restaurantCollection = collection(firestore, 'restaurants');
+        // return addDoc(restaurantCollection, data);
     };
 
     const navigate = useNavigate();
@@ -34,39 +32,41 @@ const Header = () => {
     };
 
     const addMockRestaurants = () => {
-        const promises = [];
-        for (let i = 0; i < 20; i++) {
-            const name =
-        getRandomItem(restaurantData.words) +
-        ' ' +
-        getRandomItem(restaurantData.words);
-            const category = getRandomItem(restaurantData.categories);
-            const city = getRandomItem(restaurantData.cities);
-            const price = Math.floor(Math.random() * 4) + 1;
-            const photoID = Math.floor(Math.random() * 22) + 1;
-            const photo =
-        'https://storage.googleapis.com/firestorequickstarts.appspot.com/food_' +
-            photoID + '.png';
-            const numRatings = 0;
-            const avgRating = 0;
+        // TODO:
+        return null
+        // const promises = [];
+        // for (let i = 0; i < 20; i++) {
+        //     const name =
+        // getRandomItem(restaurantData.words) +
+        // ' ' +
+        // getRandomItem(restaurantData.words);
+        //     const category = getRandomItem(restaurantData.categories);
+        //     const city = getRandomItem(restaurantData.cities);
+        //     const price = Math.floor(Math.random() * 4) + 1;
+        //     const photoID = Math.floor(Math.random() * 22) + 1;
+        //     const photo =
+        // 'https://storage.googleapis.com/firestorequickstarts.appspot.com/food_' +
+        //     photoID + '.png';
+        //     const numRatings = 0;
+        //     const avgRating = 0;
 
-            const promise = addRestaurant({
-                name: name,
-                category: category,
-                price: price,
-                city: city,
-                numRatings: numRatings,
-                avgRating: avgRating,
-                photo: photo,
-            });
+        //     const promise = addRestaurant({
+        //         name: name,
+        //         category: category,
+        //         price: price,
+        //         city: city,
+        //         numRatings: numRatings,
+        //         avgRating: avgRating,
+        //         photo: photo,
+        //     });
 
-            if (!promise) {
-                alert('addRestaurant() is not implemented yet!');
-                return Promise.reject();
-            } else {
-                promises.push(promise);
-            }
-        }
+        //     if (!promise) {
+        //         alert('addRestaurant() is not implemented yet!');
+        //         return Promise.reject();
+        //     } else {
+        //         promises.push(promise);
+        //     }
+        // }
     };
 
     useEffect(() => {

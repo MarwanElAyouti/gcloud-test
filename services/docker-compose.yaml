@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+
+
+  server:
+    build: ./friendlyeats-server
+    container_name: server
+    command: uvicorn friendlyeats.app:app --host 0.0.0.0 --port 80 --reload --log-level debug
+    env_file:
+      - ./friendlyeats-server/.env
+    ports:
+      - 80:80
+    volumes:
+      - ./friendlyeats-server:/code
+
+  frontend:
+    build: ./friendlyeats-frontend
+    container_name: frontend
+    ports:
+      - 4173:4173
+    volumes:
+      - ./friendlyeats-frontend:/code
+      - /code/node_modules
+

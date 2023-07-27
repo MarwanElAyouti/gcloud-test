@@ -2,67 +2,36 @@ import { useOutletContext, useParams } from 'react-router-dom';
 import RatingModal from '../components/ratingModal';
 import { JSX } from 'react/jsx-runtime';
 
-import AddIcon from '../assets/add.svg';
-import axios from 'axios';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 
-const Restaurant = ({ queryClient }) => {
-    const uid = useOutletContext();
+import { fetchRestaurant, fetchReviews, postReview } from '../actions';
+
+const Restaurant = () => {
+    // const uid = useOutletContext();
     const { id } = useParams();
+    const queryClient = useQueryClient();
 
+    const getRestaurant =  async () =>
+        await fetchRestaurant(id);
 
-    const fetchRestaurant =  async () =>
-        await axios.get(`http://localhost:80/restaurants/${id}`).then((response) => response.data)
-
-    const fetchReviews = async () =>
-        await axios.get(`http://localhost:80/ratings/${id}`).then((response) => response.data)
+    const getReviews = async () =>
+        await fetchReviews(id);
     
     const addRating = async (review:any) =>
-        await axios.post(`http://localhost:80/ratings/${id}/add_rating`, review).then((response) => response.data)
+        await postReview(id, review);
     
-    // const getRestaurant = () => {
-    //     getDoc(doc(collection(firestore, 'restaurants'), id)).then(
-    //         (docSnap: any) => {
-    //             if (docSnap.exists()) {
-    //                 setRestaurant(docSnap.data());
-    //             }
-    //         }
-    //     );
-    // };
-    const { data : restaurant } = useQuery('restaurant', fetchRestaurant, {enabled: !!id})
-    const { data: reviews } = useQuery('reviews', fetchReviews, {enabled: !!restaurant});
+    const { data : restaurant } = useQuery('restaurant', getRestaurant, {enabled: !!id})
+    const { data: reviews } = useQuery('reviews', getReviews, {enabled: !!restaurant});
 
-    const rating_mutation = useMutation(addRating, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('reviews');
-        },
-    });
+    const useAddRating = () => {
+        return useMutation(addRating, {
+            onSuccess: () => {
+                queryClient.invalidateQueries(['reviews']);
+                
+            },
+        });
+    }
 
-
-    const updateRestaurantImage = async (target: HTMLInputElement) => {
-        // const image = target.files ? target.files[0] : null;
-        // if (!image) {
-        //     return;
-        // }
-        // try {
-        //     const filePath = `images/${id}/${image.name}`;
-        //     const newImageRef = ref(storage, filePath);
-        //     await uploadBytesResumable(newImageRef, image);
-        //     const publicImageUrl = await getDownloadURL(newImageRef);
-        //     const restaurantRef = doc(collection(firestore, 'restaurants'), id);
-        //     console.log(publicImageUrl, '2');
-        //     restaurantRef
-        //         ? await updateDoc(restaurantRef, {
-        //             photo: publicImageUrl,
-        //         })
-        //         : null;
-        // } catch (error) {
-        //     console.error(
-        //         'There was an error uploading a file to Cloud Storage:',
-        //         error
-        //     );
-        // }
-    };
     return (
         <div className="bg-navy-20 min-h-screen">
             <div className="relative w-full">
@@ -83,26 +52,11 @@ const Restaurant = ({ queryClient }) => {
                     </div>
                     <div className="flex absolute bottom-[-30px] flex-row right-0 justify-end w-1/3">
                         <RatingModal addReview={addRating} />
-                        <label
-                            onChange={(event) =>
-                                updateRestaurantImage(event.target as HTMLInputElement)
-                            }
-                            htmlFor="upload-image"
-                            className=" bg-amber-800 w-16 h-16 rounded-full cursor-pointer shadow-lg mx-auto"
-                        >
-                            <input
-                                name=""
-                                type="file"
-                                id="upload-image"
-                                className="file-input hidden w-full h-full"
-                            />
-                            <img className="w-16 h-16" src={AddIcon} alt="Upload image" />
-                        </label>
                     </div>
                 </div>
             </div>
             <div className="w-3/4 h-full mx-auto">
-                {reviews?.map((rating) => (
+                {reviews?.map((rating:any) => (
                     <Rating rating={rating} />
                 ))}
             </div>

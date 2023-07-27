@@ -4,6 +4,9 @@ from friendlyeats.schemas import Restaurant, Rating
 from friendlyeats.services.jwt import get_auth_user
 from friendlyeats.db import db
 from google.cloud.firestore import Query
+from google.cloud.firestore_v1.base_query import FieldFilter, BaseCompositeFilter
+from typing import Optional
+
 router = APIRouter()
 
 
@@ -28,18 +31,34 @@ async def get_restaurant(id:str) -> Restaurant:
 
 
 @router.get("/restaurants")
-async def get_all_restaurants() -> list[Restaurant]:
+async def get_all_restaurants(category: Optional[str] = None, city: Optional[str] = None, price: Optional[int] = None, sort: Optional[str] = "avgRating") -> list[Restaurant]:
+    QUERY_LIMIT = 50
+    filters = []
     # Query restaurants collection
-    query = db.collection('restaurants').order_by('avgRating', direction=Query.DESCENDING).limit(50)
+    query = db.collection('restaurants')
+
+    # Apply filters
+    if category:
+        filters.append(["category", "==", category])
+    if city:
+        filters.append(["city", "==", city])
+    if price:
+        filters.append(["price", "==", price])
+
+    query = query.where(filter=BaseCompositeFilter("AND", [FieldFilter(*_c) for _c in filters]))
+
+    # Set sorting column
+    if sort:
+        query = query.order_by(sort, direction=Query.DESCENDING).limit(QUERY_LIMIT)
+    else:
+        query = query.order_by(sort, direction=Query.DESCENDING).limit(QUERY_LIMIT)
+    
     snapshot = query.get()
-    restaurants = []
+    
     if not snapshot:
         return []
-    for doc in snapshot:
-        data = doc.to_dict()
-        restaurant = Restaurant(id=doc.id,**data)
-        restaurants.append(restaurant)
-    return restaurants
+    
+    return [Restaurant(id=doc.id, **doc.to_dict()) for doc in snapshot]
 
 
 @router.get("/ratings/{id}")

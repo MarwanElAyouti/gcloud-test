@@ -49,7 +49,7 @@ async def get_all_restaurants(category: Optional[str] = None, city: Optional[str
 
     # Set sorting column
     if sort: 
-        if sort == "Reviews":
+        if sort == "Review":
             query = query.order_by("numRatings", direction=Query.DESCENDING).limit(QUERY_LIMIT)
         else:
             query = query.order_by("avgRating", direction=Query.DESCENDING).limit(QUERY_LIMIT)

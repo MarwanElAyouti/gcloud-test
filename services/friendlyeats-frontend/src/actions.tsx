@@ -9,7 +9,8 @@ export const fetchRestaurants =  async (filters:FiltersType) => {
     let path = `${API_ENDPOINT}/restaurants?`
     if (Object.keys(filters).length > 0) {
         for (const [key, value] of Object.entries(filters)) {
-            if (value) path += `${key}=${value}&`
+            if (value && key != "price") path += `${key}=${value}&`
+            else if (value && key == "price") path += `${key}=${value.length}&`
         }
     }
     return await axios.get(path).then((response:any) => response.data)    

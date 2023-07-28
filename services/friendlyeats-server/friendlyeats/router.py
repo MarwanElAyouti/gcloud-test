@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
-from friendlyeats.schemas import Restaurant, Rating
+from friendlyeats.schemas import Restaurant, Rating, AddRestaurant
 from friendlyeats.services.jwt import get_auth_user
 from friendlyeats.db import db
 from google.cloud.firestore import Query
@@ -105,3 +105,10 @@ async def add_review(restaurant_id: str, rating: Rating):
         rating_collection_ref.document().set(rating.dict())
 
     return {"message": "Review added successfully", "restaurant_id": restaurant_id}
+
+@router.post("/restaurants")
+async def add_restaurant(restaurant: AddRestaurant):
+    # Get restaurant collection
+    restaurant_collection = db.collection('restaurants')
+    # Add restaurant 
+    restaurant_collection.add(restaurant.dict())

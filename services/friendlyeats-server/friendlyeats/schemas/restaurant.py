@@ -2,22 +2,14 @@
 from pydantic import BaseModel
 
 
-class Restaurant(BaseModel):
-    id : str
-    avgRating : int
+class AddRestaurant(BaseModel):
+    avgRating : int = 0
     category : str
     city : str
     name : str
-    numRatings: str
+    numRatings: int = 0
     photo : str
     price : int
 
-class RestaurantResponse(BaseModel):
-    data : Restaurant
-
-class RestaurantDocument(BaseModel):
-    id : str
-    data : Restaurant
-       
-class RestaurantsResponse(BaseModel):
-    data : list[Restaurant]
+class Restaurant(AddRestaurant):
+   id: str

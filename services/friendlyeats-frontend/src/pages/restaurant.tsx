@@ -20,12 +20,13 @@ const Restaurant = () => {
         await postReview(id, review);
     
     const { data : restaurant } = useQuery('restaurant', getRestaurant, {enabled: !!id})
-    const { data: reviews } = useQuery('reviews', getReviews, {enabled: !!restaurant});
+    const { data: reviews, refetch: refetchReviews } = useQuery('reviews', getReviews, {enabled: !!restaurant});
 
     const useAddRating = () => {
         return useMutation(addRating, {
             onSuccess: () => {
                 useQueryClient().invalidateQueries(['reviews']);
+                refetchReviews()
                 
             },
         });

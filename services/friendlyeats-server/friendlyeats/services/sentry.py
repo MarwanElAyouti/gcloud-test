@@ -1,7 +1,7 @@
 import sentry_sdk
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 
-from friendlyeats.constants import  FAST_API_APP
+from friendlyeats.constants import FAST_API_APP
 from friendlyeats.settings import APP_ENV, SENTRY_DSN
 
 integrations_dict: dict = {FAST_API_APP: FastApiIntegration}

@@ -31,7 +31,7 @@ async def get_restaurant(id:str) -> Restaurant:
 
 
 @router.get("/restaurants")
-async def get_all_restaurants(category: Optional[str] = None, city: Optional[str] = None, price: Optional[int] = None, sort: Optional[str] = "avgRating") -> list[Restaurant]:
+async def get_all_restaurants(category: Optional[str] = None, city: Optional[str] = None, price: Optional[int] = None, sort: Optional[str] = "Rating") -> list[Restaurant]:
     QUERY_LIMIT = 50
     filters = []
     # Query restaurants collection
@@ -48,10 +48,11 @@ async def get_all_restaurants(category: Optional[str] = None, city: Optional[str
     query = query.where(filter=BaseCompositeFilter("AND", [FieldFilter(*_c) for _c in filters]))
 
     # Set sorting column
-    if sort:
-        query = query.order_by(sort, direction=Query.DESCENDING).limit(QUERY_LIMIT)
-    else:
-        query = query.order_by(sort, direction=Query.DESCENDING).limit(QUERY_LIMIT)
+    if sort: 
+        if sort == "Reviews":
+            query = query.order_by("numRatings", direction=Query.DESCENDING).limit(QUERY_LIMIT)
+        else:
+            query = query.order_by("avgRating", direction=Query.DESCENDING).limit(QUERY_LIMIT)
     
     snapshot = query.get()
     

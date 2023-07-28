@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react';
 import FilterModal from '../components/filterModal';
 import RestaurantCards from '../components/restaurantCards';
-import { useQuery } from 'react-query';
-import axios from 'axios';
+import { useQuery, useQueryClient } from 'react-query';
+import { fetchRestaurants } from '../actions';
 
-export type Restaurant = {
-    id : string,
-    avgRating : number,
-    category : string,
-    city : string,
-    name : string,
-    numRatings: string,
-    photo: string,
-    price: number
-}
+
 const Home = () => {
+    const queryClient = useQueryClient();
     const [filters, setFilters] = useState({
         category: '',
         city: '',
@@ -22,33 +14,15 @@ const Home = () => {
         sort: 'Rating',
     });
     
-    const fetchRestaurants =  async () =>
-        await axios.get('http://localhost:80/restaurants').then((response) => response.data)
+    const getRestaurants =  async () =>
+        await fetchRestaurants(filters)
     
 
-    // const getFilteredRestaurants = () => {
-    //     let q = query(collection(firestore, 'restaurants'));
-    //     if (filters.category !== '') {
-    //         q = query(q, where('category', '==', filters.category));
-    //     }
-    //     if (filters.city !== '') {
-    //         q = query(q, where('city', '==', filters.city));
-    //     }
-    //     if (filters.price !== '') {
-    //         q = query(q, where('price', '==', filters.price.length));
-    //     }
-    //     if (filters.sort === 'Rating') {
-    //         q = query(q, orderBy('avgRating', 'desc'));
-    //     } else if (filters.sort === 'Reviews') {
-    //         q = query(q, orderBy('numRatings', 'desc'));
-    //     }
-    //     return q;
-    // };
-
-    const { data: restaurants } = useQuery('restaurants', fetchRestaurants)
+    const { data: restaurants, refetch } = useQuery('restaurants', getRestaurants, { notifyOnChangeProps: "tracked"})
     
     useEffect(() => {
         console.log('fetching filters...');
+        refetch()
     }, [filters]);
 
     const updateField = (type: string, value: string) => {

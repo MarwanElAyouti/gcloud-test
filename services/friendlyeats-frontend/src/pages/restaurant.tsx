@@ -9,7 +9,6 @@ import { fetchRestaurant, fetchReviews, postReview } from '../actions';
 const Restaurant = () => {
     // const uid = useOutletContext();
     const { id } = useParams();
-    const queryClient = useQueryClient();
 
     const getRestaurant =  async () =>
         await fetchRestaurant(id);
@@ -26,7 +25,7 @@ const Restaurant = () => {
     const useAddRating = () => {
         return useMutation(addRating, {
             onSuccess: () => {
-                queryClient.invalidateQueries(['reviews']);
+                useQueryClient().invalidateQueries(['reviews']);
                 
             },
         });

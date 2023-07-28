@@ -1,4 +1,4 @@
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import RatingModal from '../components/ratingModal';
 import { JSX } from 'react/jsx-runtime';
 
@@ -7,8 +7,9 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { fetchRestaurant, fetchReviews, postReview } from '../actions';
 
 const Restaurant = () => {
-    // const uid = useOutletContext();
     const { id } = useParams();
+
+    const queryClient = useQueryClient();
 
     const getRestaurant =  async () =>
         await fetchRestaurant(id);
@@ -25,7 +26,7 @@ const Restaurant = () => {
     const useAddRating = () => {
         return useMutation(addRating, {
             onSuccess: () => {
-                useQueryClient().invalidateQueries(['reviews']);
+                queryClient.invalidateQueries(['reviews']);
                 refetchReviews()
                 
             },

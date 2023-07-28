@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import FilterModal from '../components/filterModal';
 import RestaurantCards from '../components/restaurantCards';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { fetchRestaurants } from '../actions';
 
 
 const Home = () => {
-    const queryClient = useQueryClient();
     const [filters, setFilters] = useState({
         category: '',
         city: '',
